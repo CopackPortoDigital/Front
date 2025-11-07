@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copack - Esqueceu sua Senha?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;600;700&display=swap');
+
+        :root {
+            --color-verde-escuro: #103417;
+            --color-verde-intermediario: #37703e;
+            --color-verde-claro: #a8d0a8;
+            --color-efeito-vidro-blur: rgba(168, 208, 168, 0.3); 
+            --color-texto-preto: #1b1b1b;
+            --color-branca: #ffffff;
+            --color-texto-claro: rgba(255, 255, 255, 0.9); 
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Gothic A1', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to right, #E2FFD9, #CEF3AE); 
+            overflow: hidden;
+            position: relative; 
+        }
+
+        .efeitos-do-fundo-principal-da-tela {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bola-verde-escura {
+            position: absolute;
+            width: 1300px; 
+            height: 1300px; 
+            border-radius: 50%;
+            background: linear-gradient(to right, #6d8630, #334211, #25300d); 
+            top: -145px; 
+            left: -350px; 
+            opacity: 0.95; 
+            box-shadow: 0px 0px 120px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .bola-verde-clara {
+            position: absolute;
+            width: 500px; 
+            height: 500px; 
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #d6d630, #3f5a0c); 
+            top: 30px; 
+            right: 50px; 
+            opacity: 0.85; 
+            box-shadow: 0px 0px 50px 25px rgba(80, 80, 80, 0.15);
+        }
+
+        /* container principall */
+
+        .caixa-principal-recuperacao {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            width: 1341px; 
+            height: 688px; 
+            padding: 60px;
+            border-radius: 30px;
+            background: var(--color-efeito-vidro-blur);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(30px);
+            background-color: rgba(16, 52, 23, 0.2); 
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .conteudo-recuperacao {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 500px; 
+            margin: 0; 
+        }
+
+        .titulo-recuperacao {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--color-texto-claro);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitulo-recuperacao {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: var(--color-texto-claro);
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+
+        /* Campos da parte de recuperação */
+
+        .campo-recuepracao {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.6); 
+            border-radius: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 470px;
+        }
+
+        .campo-recuepracao i {
+            padding: 15px 30px; 
+            color: var(--color-verde-escuro);
+            font-size: 1.2em; 
+            border-right: 2px solid var(--color-verde-intermediario);
+        }
+
+        .campo-recuepracao input {
+            flex-grow: 1;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 0 25px 25px 0;
+            outline: none;
+            background: transparent;
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--color-verde-escuro);
+        }
+
+        .campo-recuepracao input::placeholder {
+            color: var(--color-verde-intermediario);
+            opacity: 0.7;
+            font-weight: 400;
+        }
+        
+        /* botao de enviar */
+
+        .botao-enviar-recuperacao {
+            background-color: var(--color-verde-escuro);
+            color: var(--color-branca);
+            padding: 15px 70px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background 0.2s, box-shadow 0.2s;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 20px;
+            border: 2px solid var(--color-verde-escuro);
+            display: block; 
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .botao-enviar-recuperacao:hover {
+            background-color: var(--color-verde-intermediario);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .rodape-copyright {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--color-verde-escuro);
+            z-index: 5;
+        }
+
+         /* logo copack */
+        .logo-copack {
+            position: absolute;
+            bottom: -50px; 
+            right: -20px; 
+            width: 350px; 
+            height: 538px; 
+            z-index: 10; 
+            background-image: url('Imagens/Logo_Copack-removebg-preview.png'); 
+            background-size: contain; 
+            background-repeat: no-repeat;
+            background-position: right bottom; 
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="efeitos-do-fundo-principal-da-tela">
+        <div class="bola-verde-escura"></div>
+        <div class="bola-verde-clara"></div>
+    </div>
+
+    <div class="caixa-principal-recuperacao">
+        
+        <div class="conteudo-recuperacao">
+            <h3 class="titulo-recuperacao">Esqueceu sua Senha?</h3>
+            <p class="subtitulo-recuperacao">
+                Digite seu e-mail e enviaremos um link para você criar uma nova senha.
+            </p>
+            
+            <div class="div-recuperacao">
+                <div class="campo-recuepracao">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="INFORME SEU EMAIL" required>
+                </div>
+                
+                <button type="submit" class="botao-enviar-recuperacao">ENVIAR</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="rodape-copyright">
+        @ 2024 CoPack. Todos os direitos reservados.
+    </div> 
+
+    <div class="logo-copack"></div>
+    
+</body>
+
+</html>
