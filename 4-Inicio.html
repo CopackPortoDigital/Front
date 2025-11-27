@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copack - Inicio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var useDark = (saved === 'dark') || (!saved && prefersDark);
+
+                if (useDark) {
+                    document.documentElement.classList.add('modo-escuro');
+                }
+
+                var meta = document.createElement('meta');
+                meta.name = 'theme-color';
+                meta.content = useDark ? '#1e1e1e' : '#f2f2f2';
+                document.head.appendChild(meta);
+
+            } catch (e) { }
+        })();
+
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;600;700&display=swap');
+
+        :root {
+            --cor-fundo-escuro: #1e1e1e;
+            --cor-fundo-claro: #f4f4f4;
+            --cor-fundo-navbar: rgba(255, 255, 255, 0.6);
+            --cor-fundo-principal: #f2f2f2;
+            --cor-fundo-cartao: rgba(255, 255, 255, 0.9);
+            --cor-texto-escuro: #333;
+            --cor-texto-claro: #fff;
+            --cor-verde-primario: #4CAF50;
+            --cor-verde-secundario: #8bc34a;
+            --cor-status-concluido: #689f38;
+            --cor-status-pendente: #ff7043;
+            --cor-grafico-concluido: #4CAF50;
+            --cor-grafico-pendente: #cddc39;
+            --cor-fundo-entrada: #fff;
+            --cor-borda: #ddd;
+            --cor-sombra: rgba(0, 0, 0, 0.1);
+            --cor-subtitulo-logo: #666;
+            --raio-borda: 12px;
+        }
+
+        .modo-escuro {
+            --cor-fundo-escuro: #000;
+            --cor-fundo-navbar: rgba(30, 30, 30, 0.8);
+            --cor-fundo-principal: #1e1e1e;
+            --cor-fundo-cartao: #2d2d2d;
+            --cor-texto-escuro: #e0e0e0;
+            --cor-texto-claro: #333;
+            --cor-verde-primario: #66bb6a;
+            --cor-verde-secundario: #aed581;
+            --cor-status-concluido: #7cb342;
+            --cor-status-pendente: #ffab40;
+            --cor-grafico-concluido: #66bb6a;
+            --cor-grafico-pendente: #ffee58;
+            --cor-fundo-entrada: #3c3c3c;
+            --cor-borda: #444;
+            --cor-sombra: rgba(255, 255, 255, 0.08);
+            --cor-subtitulo-logo: #a0a0a0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gothic A1', sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-escuro);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .container-painel {
+            width: 100vw;
+            min-height: 100vh;
+            background-color: var(--cor-fundo-principal);
+            padding-top: 70px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .barra-navegacao {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--cor-fundo-navbar);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid var(--cor-borda);
+            transition: background-color 0.5s, border-bottom-color 0.5s;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--cor-texto-escuro);
+            line-height: 1;
+        }
+
+        .logo-co {
+            color: var(--cor-verde-primario);
+        }
+
+        .logo-pack {
+            color: var(--cor-texto-escuro);
+        }
+
+        .logo-subtitulo {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--cor-subtitulo-logo);
+        }
+
+        .menu-nav a {
+            text-decoration: none;
+            color: var(--cor-texto-escuro);
+            margin: 0 20px;
+            padding: 8px 0;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .menu-nav a:hover,
+        .menu-nav a.ativo {
+            color: var(--cor-verde-primario);
+            border-bottom: 3px solid var(--cor-verde-primario);
+        }
+
+        .icone-usuario {
+            font-size: 1.8rem;
+            color: var(--cor-texto-escuro);
+            cursor: pointer;
+        }
+
+        .alternar-tema {
+            cursor: pointer;
+            margin-left: 20px;
+            font-size: 1.5rem;
+            color: var(--cor-texto-escuro);
+            transition: color 0.3s;
+        }
+
+        .acoes-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .conteudo {
+            padding: 30px;
+        }
+
+        .titulo-pagina {
+            font-size: 3.2rem;
+            margin-bottom: 30px;
+            color: var(--cor-verde-primario);
+        }
+
+        .cards-resumo {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .cartao {
+            background-color: var(--cor-fundo-cartao);
+            border-radius: var(--raio-borda);
+            padding: 35px;
+            box-shadow: 0 6px 12px var(--cor-sombra);
+            transition: transform 0.2s, background-color 0.5s, box-shadow 0.5s;
+            border: 1px solid var(--cor-borda);
+        }
+
+        .cartao:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--cor-sombra);
+        }
+
+        .rotulo-cartao {
+            font-size: 1.1rem;
+            color: var(--cor-subtitulo-logo);
+            margin-bottom: 10px;
+        }
+
+        .dados-cartao {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .valor-cartao {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--cor-texto-escuro);
+        }
+
+        .dados-cartao i {
+            font-size: 2.2rem;
+            color: var(--cor-verde-secundario);
+        }
+
+        .cartao-previsao .valor-cartao {
+            font-size: 2rem;
+            color: var(--cor-verde-primario);
+        }
+
+        .area-principal {
+            display: flex;
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        .secao-pedidos {
+            flex: 2;
+            background-color: var(--cor-fundo-cartao);
+            padding: 30px;
+            border-radius: var(--raio-borda);
+            box-shadow: 0 4px 8px var(--cor-sombra);
+            transition: background-color 0.5s, box-shadow 0.5s;
+            border: 1px solid var(--cor-borda);
+        }
+
+        .barra-lateral {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .barra-pesquisa {
+            display: flex;
+            align-items: center;
+            background-color: var(--cor-fundo-entrada);
+            border-radius: var(--raio-borda);
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--cor-borda);
+            box-shadow: 0 2px 4px var(--cor-sombra);
+            transition: background-color 0.5s, border-color 0.5s;
+        }
+
+        .barra-pesquisa i {
+            color: var(--cor-subtitulo-logo);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .barra-pesquisa input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            font-size: 1.1rem;
+            background: transparent;
+            color: var(--cor-texto-escuro);
+        }
+
+        .secao-pedidos h2 {
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--cor-texto-escuro);
+        }
+
+        .tabela-pedidos {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .tabela-pedidos th,
+        .tabela-pedidos td {
+            padding: 14px;
+            text-align: left;
+            font-size: 1rem;
+            color: var(--cor-texto-escuro);
+        }
+
+        .tabela-pedidos th {
+            color: var(--cor-subtitulo-logo);
+            font-weight: 500;
+            background: var(--cor-fundo-cartao);
+            border-bottom: 1px solid var(--cor-borda);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .tabela-pedidos tbody tr {
+            background-color: var(--cor-fundo-cartao);
+            border-radius: var(--raio-borda);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .tabela-pedidos tbody tr:hover {
+            background-color: var(--cor-fundo-principal);
+            box-shadow: 0 2px 8px var(--cor-sombra);
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+            color: var(--cor-texto-claro);
+        }
+
+        .status.concluido {
+            background-color: var(--cor-status-concluido);
+        }
+
+        .status.aguardando {
+            background-color: var(--cor-status-pendente);
+        }
+
+        .os {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            color: var(--cor-texto-claro);
+        }
+
+        .os.concluido {
+            background-color: var(--cor-verde-primario);
+        }
+
+        .os.aguardando {
+            background-color: var(--cor-status-pendente);
+        }
+
+        .botao-todos-pedidos {
+            background: none;
+            border: 2px solid var(--cor-verde-primario);
+            color: var(--cor-verde-primario);
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+        }
+
+        .botao-todos-pedidos:hover {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-claro);
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+        }
+
+        .direitos-autorais {
+            font-size: 0.85rem;
+            color: var(--cor-subtitulo-logo);
+            text-align: center;
+            margin-top: 30px;
+            transition: color 0.5s;
+        }
+
+        .botao-omie {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-claro);
+            border: none;
+            padding: 16px;
+            border-radius: var(--raio-borda);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px var(--cor-sombra);
+        }
+
+        .botao-omie:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+        }
+
+        .cartao-progresso-producao {
+            flex-grow: 1;
+            background-color: var(--cor-fundo-cartao);
+            padding: 30px;
+            border-radius: var(--raio-borda);
+            box-shadow: 0 4px 8px var(--cor-sombra);
+            text-align: center;
+            border: 1px solid var(--cor-borda);
+            transition: background-color 0.5s, border-color 0.5s;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cartao-progresso-producao h3 {
+            font-size: 1.6rem;
+            margin-bottom: 30px;
+            color: var(--cor-texto-escuro);
+        }
+
+        .area-grafico {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+            margin-bottom: auto;
+            padding: 30px 0;
+        }
+
+        .espaco-grafico-pizza {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: conic-gradient(var(--cor-grafico-concluido) 0% 60%,
+                    var(--cor-grafico-pendente) 60% 100%);
+            box-shadow: inset 0 0 0 8px var(--cor-borda);
+            transition: background 0.5s, box-shadow 0.5s;
+        }
+
+        .legenda-grafico {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid var(--cor-borda);
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .item-legenda {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            color: var(--cor-subtitulo-logo);
+        }
+
+        .cor-legenda {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .cor-concluido {
+            background-color: var(--cor-grafico-concluido);
+        }
+
+        .cor-aguardando {
+            background-color: var(--cor-grafico-pendente);
+        }
+
+        body {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out;
+        }
+
+        body.aparecer {
+            opacity: 1;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-painel" id="container-painel">
+
+        <header class="barra-navegacao">
+
+            <a href="4-Inicio.html" class="logo">
+                <span class="logo-co">Co</span><span class="logo-pack">Pack</span>
+                <span class="logo-subtitulo">EMBALAGENS</span>
+            </a>
+
+            <nav class="menu-nav">
+
+                <a href="#" class="ativo">Início</a>
+                <a href="5-Pedidos.html">Pedidos</a>
+                <a href="7-Produção.html">Produção</a>
+                <a href="9-Relatórios.html">Relatórios</a>
+
+            </nav>
+
+            <div class="acoes-nav">
+                <i class="fas fa-moon alternar-tema" id="alternar-tema" title="Alternar Tema"></i>
+                <i class="fas fa-user-circle icone-usuario"></i>
+
+            </div>
+
+        </header>
+
+        <main class="conteudo">
+
+            <h1 class="titulo-pagina">Início</h1>
+
+            <div class="cards-resumo">
+
+                <div class="cartao">
+
+                    <div class="rotulo-cartao">Pedidos Ativos</div>
+
+                    <div class="dados-cartao">
+                        <span class="valor-cartao">43</span>
+                        <i class="fas fa-box"></i>
+                    </div>
+
+                </div>
+
+                <div class="cartao">
+
+                    <div class="rotulo-cartao">Pedidos Concluídos</div>
+
+                    <div class="dados-cartao">
+                        <span class="valor-cartao">23</span>
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+
+                </div>
+
+                <div class="cartao">
+
+                    <div class="rotulo-cartao">Em Produção</div>
+
+                    <div class="dados-cartao">
+                        <span class="valor-cartao">20</span>
+                        <i class="fas fa-industry"></i>
+                    </div>
+
+                </div>
+
+                <div class="cartao cartao-previsao">
+
+                    <div class="rotulo-cartao">Previsão de Faturamento</div>
+
+                    <div class="dados-cartao">
+                        <span class="valor-cartao">R$ 80.000,00</span>
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="area-principal">
+
+                <section class="secao-pedidos">
+
+                    <div class="barra-pesquisa">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Pesquise pelo Nº do pedido">
+                    </div>
+
+                    <h2>Pedidos Recentes</h2>
+
+                    <table class="tabela-pedidos">
+
+                        <thead>
+
+                            <tr>
+                                <th><b>Nº Pedido</b></th>
+                                <th><b>Produto</b></th>
+                                <th><b>Status</b></th>
+                                <th><b>OS</b></th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>00000001</td>
+                                <td>Copo 200ml</td>
+                                <td><span class="status concluido">Completo</span></td>
+                                <td>
+                                    <div class="os concluido"><i class="fas fa-check"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000002</td>
+                                <td>BDJ 800ml</td>
+                                <td><span class="status aguardando">Aguardando</span></td>
+                                <td>
+                                    <div class="os aguardando"><i class="fas fa-times"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000003</td>
+                                <td>Pote 300ml</td>
+                                <td><span class="status aguardando">Aguardando</span></td>
+                                <td>
+                                    <div class="os aguardando"><i class="fas fa-times"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000004</td>
+                                <td>Copo 300ml</td>
+                                <td><span class="status aguardando">Aguardando</span></td>
+                                <td>
+                                    <div class="os aguardando"><i class="fas fa-times"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000005</td>
+                                <td>Copo 400ml</td>
+                                <td><span class="status aguardando">Aguardando</span></td>
+                                <td>
+                                    <div class="os aguardando"><i class="fas fa-times"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000006</td>
+                                <td>Capa 500ml</td>
+                                <td><span class="status concluido">Completo</span></td>
+                                <td>
+                                    <div class="os concluido"><i class="fas fa-check"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000007</td>
+                                <td>Pote 250ml</td>
+                                <td><span class="status concluido">Completo</span></td>
+                                <td>
+                                    <div class="os concluido"><i class="fas fa-check"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000008</td>
+                                <td>BDJ 650ml</td>
+                                <td><span class="status concluido">Completo</span></td>
+                                <td>
+                                    <div class="os concluido"><i class="fas fa-check"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000009</td>
+                                <td>BDJ 500ml</td>
+                                <td><span class="status concluido">Completo</span></td>
+                                <td>
+                                    <div class="os concluido"><i class="fas fa-check"></i></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>00000010</td>
+                                <td>BDJ 1000ml</td>
+                                <td><span class="status aguardando">Aguardando</span></td>
+                                <td>
+                                    <div class="os aguardando"><i class="fas fa-times"></i></div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                    <a href="5-Pedidos.html"><button class="botao-todos-pedidos">Ver Todos os Pedidos</button></a>
+
+                </section>
+
+                <aside class="barra-lateral">
+
+                    <button class="botao-omie">Atualizar Dados do OMIE</button>
+
+                    <div class="cartao-progresso-producao cartao">
+
+                        <h3>Progresso de Produção</h3>
+
+                        <div class="area-grafico">
+                            <div class="espaco-grafico-pizza"></div>
+                        </div>
+
+                        <div class="legenda-grafico">
+
+                            <div class="item-legenda">
+                                <span class="cor-legenda cor-concluido"></span>
+                                <span>Concluído (60%)</span>
+                            </div>
+
+                            <div class="item-legenda">
+                                <span class="cor-legenda cor-aguardando"></span>
+                                <span>Aguardando (40%)</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <p class="direitos-autorais">&copy; 2024 CoPack. Todos os direitos reservados.</p>
+
+        </main>
+
+    </div>
+
+    <script>
+
+        const themeToggle = document.getElementById('alternar-tema');
+        const body = document.body;
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                body.classList.add('modo-escuro');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            } else {
+                body.classList.remove('modo-escuro');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            }
+        }
+
+        window.onload = function () {
+            const savedTheme = localStorage.getItem('theme');
+
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark') {
+                applyTheme(true);
+            } else if (savedTheme === 'light') {
+                applyTheme(false);
+            } else if (prefersDark) {
+                applyTheme(true);
+            } else {
+                applyTheme(false);
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = body.classList.contains('modo-escuro');
+
+            applyTheme(!isDark);
+
+            if (!isDark) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("aparecer");
+
+            const links = document.querySelectorAll("a[href]");
+            links.forEach(link => {
+                const url = link.getAttribute("href");
+                if (url && !url.startsWith("#") && !url.startsWith("http")) {
+                    link.addEventListener("click", e => {
+                        e.preventDefault();
+                        document.body.style.opacity = 0;
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 10);
+                    });
+                }
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

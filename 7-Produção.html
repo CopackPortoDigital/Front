@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoPack - Produção</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Gothic+A1:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var useDark = (saved === 'dark') || (!saved && prefersDark);
+
+                if (useDark) {
+                    document.documentElement.classList.add('modo-escuro');
+                }
+
+                var meta = document.createElement('meta');
+                meta.name = 'theme-color';
+                meta.content = useDark ? '#1e1e1e' : '#f2f2f2';
+                document.head.appendChild(meta);
+
+            } catch (e) { }
+        })();
+
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;600;700&display=swap');
+
+        :root {
+            --cor-fundo-escuro: #1e1e1e;
+            --cor-fundo-claro: #f4f4f4;
+            --cor-nav-fundo: rgba(255, 255, 255, 0.6);
+            --cor-principal-fundo: #f2f2f2;
+            --cor-cartao-fundo: rgba(255, 255, 255, 0.95);
+            --cor-texto-principal: #333;
+            --cor-texto-secundario: #fff;
+            --cor-verde-primario: #4caf50;
+            --cor-verde-secundario: #8bc34a;
+            --cor-status-completo: #689f38;
+            --cor-status-pendente: #ffab40;
+
+            --cor-grafico-completo: #388e3c;
+            --cor-grafico-pendente: #fdd835;
+            --cor-grafico-processando: #2196f3;
+
+            --cor-input-fundo: #fff;
+            --cor-borda-linha: #cccccc;
+            --cor-sombra-caixa: rgba(0, 0, 0, 0.1);
+            --cor-texto-subtitulo-logo: #666;
+            --borda-raio: 12px;
+            --cor-efeito-hover: #f2f2f2;
+        }
+
+        .modo-escuro {
+            --cor-fundo-escuro: #000;
+            --cor-nav-fundo: rgba(30, 30, 30, 0.8);
+            --cor-principal-fundo: #1e1e1e;
+            --cor-cartao-fundo: #2d2d2d;
+            --cor-texto-principal: #e0e0e0;
+            --cor-texto-secundario: #333;
+            --cor-verde-primario: #66bb6a;
+            --cor-verde-secundario: #aed581;
+            --cor-status-completo: #7cb342;
+            --cor-status-pendente: #ffab40;
+
+            --cor-grafico-completo: #66bb6a;
+            --cor-grafico-pendente: #ffee58;
+            --cor-grafico-processando: #64b5f6;
+
+            --cor-input-fundo: #444444;
+            --cor-borda-linha: #444;
+            --cor-sombra-caixa: rgba(255, 255, 255, 0.08);
+            --cor-texto-subtitulo-logo: #a0a0a0;
+            --cor-efeito-hover: #1e1e1e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gothic A1', sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-principal-fundo);
+            color: var(--cor-texto-principal);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .container-principal {
+            width: 100vw;
+            min-height: 100vh;
+            background-color: var(--cor-principal-fundo);
+            padding-top: 70px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .barra-navegacao-topo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--cor-nav-fundo);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid var(--cor-borda-linha);
+            transition: background-color 0.5s, border-bottom-color 0.5s;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--cor-texto-principal);
+            line-height: 1;
+        }
+
+        .logo-co {
+            color: var(--cor-verde-primario);
+        }
+
+        .logo-pack {
+            color: var(--cor-texto-principal);
+        }
+
+        .subtitulo-logo {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--cor-texto-subtitulo-logo);
+        }
+
+        .menu-navegacao a {
+            text-decoration: none;
+            color: var(--cor-texto-principal);
+            margin: 0 20px;
+            padding: 8px 0;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .menu-navegacao a:hover,
+        .menu-navegacao a.ativo {
+            color: var(--cor-verde-primario);
+            border-bottom: 3px solid var(--cor-verde-primario);
+        }
+
+        .icone-usuario {
+            font-size: 1.8rem;
+            color: var(--cor-texto-principal);
+            cursor: pointer;
+        }
+
+        .alternador-tema {
+            cursor: pointer;
+            margin-left: 20px;
+            font-size: 1.5rem;
+            color: var(--cor-texto-principal);
+            transition: color 0.3s;
+        }
+
+        .acoes-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .conteudo-pagina {
+            padding: 30px;
+        }
+
+        .titulo-principal {
+            font-size: 3.2rem;
+            margin-bottom: 30px;
+            color: var(--cor-verde-primario);
+        }
+
+        .area-principal-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .producao-principal {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .container-dropdown-filtro {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .container-filtros {
+            display: flex;
+            gap: 35px;
+            margin-bottom: 10px;
+        }
+
+        .botao-filtro {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-secundario);
+            border: none;
+            padding: 18px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            box-shadow: 0 2px 4px var(--cor-sombra-caixa);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .botao-filtro:hover {
+            background-color: #388e3c;
+            transform: translateY(-1px);
+        }
+
+        .icone-filtro {
+            color: var(--cor-texto-secundario);
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+
+        .botao-filtro.ativo .icone-filtro {
+            transform: rotate(180deg);
+        }
+
+        .menu-suspenso {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 15;
+            background-color: var(--cor-cartao-fundo);
+            min-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--cor-sombra-caixa);
+            padding: 10px 0;
+            margin-top: 5px;
+            border: 1px solid var(--cor-borda-linha);
+            transition: background-color 0.5s, border-color 0.5s;
+        }
+
+        .menu-suspenso a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: var(--cor-texto-principal);
+            font-size: 1rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .menu-suspenso a:hover {
+            background-color: var(--cor-principal-fundo);
+            color: var(--cor-verde-primario);
+        }
+
+        .modo-escuro .menu-suspenso a {
+            color: var(--cor-texto-principal);
+        }
+
+        .modo-escuro .menu-suspenso a:hover {
+            background-color: #383838;
+        }
+
+
+        .secao-pedidos {
+            background-color: var(--cor-cartao-fundo);
+            padding: 20px 30px 30px 30px;
+            border-radius: var(--borda-raio);
+            box-shadow: 0 4px 8px var(--cor-sombra-caixa);
+            transition: background-color 0.5s, box-shadow 0.5s;
+            border: 1px solid var(--cor-borda-linha);
+            overflow-x: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .secao-pedidos .barra-busca {
+            background-color: var(--cor-input-fundo);
+            border-radius: var(--borda-raio);
+            padding: 12px 20px;
+            border: 1px solid var(--cor-borda-linha);
+            box-shadow: 0 2px 4px var(--cor-sombra-caixa);
+            transition: background-color 0.5s, border-color 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .secao-pedidos .barra-busca i {
+            color: var(--cor-texto-subtitulo-logo);
+            font-size: 1.2rem;
+        }
+
+        .secao-pedidos .barra-busca input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            font-size: 1.1rem;
+            background: transparent;
+            color: var(--cor-texto-principal);
+        }
+
+        .secao-pedidos .barra-busca input::placeholder {
+            color: var(--cor-texto-subtitulo-logo);
+        }
+
+
+        .tabela-pedidos {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .tabela-pedidos th,
+        .tabela-pedidos td {
+            padding: 16.8px 14px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .tabela-pedidos th {
+            color: var(--cor-verde-primario);
+            font-weight: 700;
+            background: none;
+            border-bottom: 2px solid var(--cor-borda-linha);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+        }
+
+        .tabela-pedidos tbody tr {
+            background-color: var(--cor-cartao-fundo);
+            border-radius: var(--borda-raio);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--cor-borda-linha);
+        }
+
+        .tabela-pedidos tbody tr:hover {
+            background-color: var(--cor-efeito-hover);
+            box-shadow: 0 4px 10px var(--cor-sombra-caixa);
+        }
+
+        .modo-escuro .tabela-pedidos th,
+        .modo-escuro .tabela-pedidos td {
+            color: var(--cor-texto-principal);
+        }
+
+        .status-pedido {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: inline-block;
+            color: var(--cor-texto-secundario);
+        }
+
+        .status-pedido.completo {
+            background-color: var(--cor-status-completo);
+        }
+
+        .status-pedido.pendente {
+            background-color: var(--cor-status-pendente);
+        }
+
+        .os {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            color: var(--cor-texto-secundario);
+        }
+
+        .os.completa {
+            background-color: var(--cor-verde-primario);
+        }
+
+        .os.pendente {
+            background-color: #e57373;
+        }
+
+        .barra-lateral {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            min-width: 300px;
+            flex-grow: 1;
+        }
+
+        .cartao-registro-auditoria {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-secundario);
+            padding: 16px;
+            border-radius: var(--borda-raio);
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .cartao-registro-auditoria:hover {
+            background-color: var(--cor-verde-primario);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--cor-sombra-caixa);
+        }
+
+        .cartao-registro-auditoria,
+        .cartao-registro-auditoria * {
+            color: var(--cor-texto-secundario) !important;
+        }
+
+        .cartao-base {
+            background-color: var(--cor-cartao-fundo);
+            border-radius: var(--borda-raio);
+            padding: 25px;
+            box-shadow: 0 4px 8px var(--cor-sombra-caixa);
+            border: 1px solid var(--cor-borda-linha);
+            transition: background-color 0.5s, box-shadow 0.5s, border-color 0.5s, transform 0.2s;
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .cartao-base:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--cor-sombra-caixa);
+        }
+
+        .card-edicao-pedidos:hover {
+            transform: none;
+            box-shadow: 0 4px 8px var(--cor-sombra-caixa);
+        }
+
+
+        .titulo-card {
+            font-size: 1.6rem;
+            margin-bottom: 34px;
+            font-weight: 600;
+            color: var(--cor-texto-principal);
+            transition: color 0.5s;
+        }
+
+        .conteudo-progresso {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .legenda-grafico-lado {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .item-legenda-lado {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+            color: var(--cor-texto-principal);
+            transition: color 0.5s;
+        }
+
+        .modo-escuro .item-legenda-lado {
+            color: var(--cor-texto-subtitulo-logo);
+        }
+
+        .cor-legenda-lado {
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .cor-grafico-concluido {
+            background-color: var(--cor-grafico-completo);
+        }
+
+        .cor-grafico-aguardando {
+            background-color: var(--cor-grafico-pendente);
+        }
+
+        .cor-grafico-processando {
+            background-color: var(--cor-grafico-processando);
+        }
+
+        .espaco-grafico-pizza {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--cor-grafico-completo) 0% 50%,
+                    var(--cor-grafico-pendente) 50% 75%,
+                    var(--cor-grafico-processando) 75% 100%);
+            box-shadow: 0 0 0 5px #f0f0f0;
+            transition: background 0.5s, box-shadow 0.5s;
+        }
+
+        .modo-escuro .espaco-grafico-pizza {
+            box-shadow: 0 0 0 5px #333;
+        }
+
+        .card-pedidos-atrasados .valor-card {
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            color: #e57373;
+            margin-top: 20px;
+        }
+
+        .card-edicao-pedidos .busca-pequena {
+            display: flex;
+            align-items: center;
+            background-color: var(--cor-input-fundo);
+            border-radius: var(--borda-raio);
+            padding: 8px 15px;
+            border: 1px solid var(--cor-borda-linha);
+            transition: background-color 0.5s, border-color 0.5s;
+            gap: 10px;
+        }
+
+        .card-edicao-pedidos .busca-pequena input {
+            padding: 5px;
+            font-size: 1rem;
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            background: transparent;
+            color: var(--cor-texto-principal);
+        }
+
+        .card-edicao-pedidos .busca-pequena input::placeholder {
+            color: var(--cor-texto-subtitulo-logo);
+        }
+
+        .card-edicao-pedidos .busca-pequena i {
+            color: var(--cor-texto-subtitulo-logo);
+            font-size: 1.1rem;
+        }
+
+        .rodape-copyright {
+            font-size: 0.85rem;
+            color: var(--cor-texto-subtitulo-logo);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 10px;
+            transition: color 0.5s;
+        }
+
+        body {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-principal" id="dashboard-container">
+
+        <header class="barra-navegacao-topo">
+
+            <a href="4-Inicio.html" class="logo">
+                <span class="logo-co">Co</span><span class="logo-pack">Pack</span>
+                <span class="subtitulo-logo">EMBALAGENS</span>
+            </a>
+
+            <nav class="menu-navegacao">
+                <a href="4-Inicio.html">Início</a>
+                <a href="5-Pedidos.html">Pedidos</a>
+                <a href="#" class="ativo">Produção</a>
+                <a href="9-Relatórios.html">Relatórios</a>
+            </nav>
+
+            <div class="acoes-nav">
+                <i class="fas fa-moon alternador-tema" id="theme-toggle" title="Alternar Tema"></i>
+                <i class="fas fa-user-circle icone-usuario"></i>
+            </div>
+
+        </header>
+
+        <main class="conteudo-pagina">
+
+            <h1 class="titulo-principal">Produção</h1>
+
+            <div class="area-principal-layout">
+
+                <div class="producao-principal">
+
+                    <div class="container-filtros">
+
+                        <div class="container-dropdown-filtro">
+                            <button class="botao-filtro" id="filter-produto">Tipo do Produto <i
+                                    class="fas fa-chevron-down icone-filtro"></i></button>
+                            <div class="menu-suspenso" id="menu-produto">
+                                <a href="#">Copo</a>
+                                <a href="#">Pote</a>
+                                <a href="#">Tampa Copo</a>
+                                <a href="#">Tampa Pote</a>
+                                <a href="#">Bandeija</a>
+                                <a href="#">Tampa Bandeija</a>
+                            </div>
+                        </div>
+
+                        <div class="container-dropdown-filtro">
+                            <button class="botao-filtro" id="filter-status">Status do Pedido <i
+                                    class="fas fa-chevron-down icone-filtro"></i></button>
+                            <div class="menu-suspenso" id="menu-status">
+                                <a href="#">Aguardando</a>
+                                <a href="#">Completo</a>
+                                <a href="#">Processando</a>
+                            </div>
+                        </div>
+
+                        <div class="container-dropdown-filtro">
+                            <button class="botao-filtro" id="filter-responsavel">Responsável <i
+                                    class="fas fa-chevron-down icone-filtro"></i></button>
+                            <div class="menu-suspenso" id="menu-responsavel">
+                                <a href="#">Ana Silva</a>
+                                <a href="#">Bruno Costa</a>
+                                <a href="#">Carlos Dantas</a>
+                                <a href="#">Diana Faria</a>
+                                <a href="#">Eduardo Gomes</a>
+                                <a href="#">Renato</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <section class="secao-pedidos">
+
+                        <div class="barra-busca">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Pesquise pelo Nº do pedido">
+                        </div>
+
+                        <table class="tabela-pedidos">
+
+                            <thead>
+                                <tr>
+                                    <th>Nº Pedido</th>
+                                    <th>Produto</th>
+                                    <th>Etapa Atual</th>
+                                    <th>Responsável</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>00000001</td>
+                                    <td>Copo 200ml</td>
+                                    <td>Corte e Vinco</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido completo">Completo</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>00000002</td>
+                                    <td>BDJ 800ml</td>
+                                    <td>Impressão</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido pendente">Aguardando</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>00000003</td>
+                                    <td>Pote 360ml</td>
+                                    <td>Embalagem</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido completo">Completo</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>00000004</td>
+                                    <td>Copo 300ml</td>
+                                    <td>Corte e Vinco</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido pendente">Aguardando</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>00000005</td>
+                                    <td>Copo 400ml</td>
+                                    <td>Impressão</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido completo">Completo</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td>00000006</td>
+                                    <td>Copo 500ml</td>
+                                    <td>Embalagem</td>
+                                    <td>Renato</td>
+                                    <td><span class="status-pedido pendente">Aguardando</span></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </section>
+
+                </div>
+
+                <aside class="barra-lateral">
+
+                    <a href="8-RegistroAuditoria.html">
+                        <div class="cartao-registro-auditoria">Registro de Auditoria</div>
+                    </a>
+
+                    <div class="cartao-base">
+
+                        <h3 class="titulo-card">Progresso Geral</h3>
+
+                        <div class="conteudo-progresso">
+
+                            <div class="legenda-grafico-lado">
+                                <div class="item-legenda-lado">
+                                    <span class="cor-legenda-lado cor-grafico-concluido"></span>
+                                    <span>Concluído</span>
+                                </div>
+                                <div class="item-legenda-lado">
+                                    <span class="cor-legenda-lado cor-grafico-aguardando"></span>
+                                    <span>Aguardando</span>
+                                </div>
+                                <div class="item-legenda-lado">
+                                    <span class="cor-legenda-lado cor-grafico-processando"></span>
+                                    <span>Processando</span>
+                                </div>
+                            </div>
+
+                            <div class="progress-chart-side">
+                                <div class="espaco-grafico-pizza"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-pedidos-atrasados cartao-base">
+                        <h3 class="titulo-card">Pedidos Em Atraso</h3>
+                        <p class="valor-card">12</p>
+                    </div>
+
+                    <div class="card-edicao-pedidos cartao-base">
+                        <h3 class="titulo-card">Editar Pedidos</h3>
+                        <div class="busca-pequena">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Número do Pedido">
+                        </div>
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <p class="rodape-copyright">&copy; 2024 CoPack. Todos os direitos reservados.</p>
+
+        </main>
+
+    </div>
+
+    <script>
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                htmlElement.classList.add('modo-escuro');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            } else {
+                htmlElement.classList.remove('modo-escuro');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            }
+        }
+
+        window.onload = function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark') {
+                applyTheme(true);
+            } else if (savedTheme === 'light') {
+                applyTheme(false);
+            } else if (prefersDark) {
+                applyTheme(true);
+            } else {
+                applyTheme(false);
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = htmlElement.classList.contains('modo-escuro');
+            applyTheme(!isDark);
+            if (!isDark) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButtons = document.querySelectorAll('.botao-filtro');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+
+                    const menuId = button.id.replace('filter', 'menu');
+                    const menu = document.getElementById(menuId);
+                    const isActive = button.classList.contains('ativo');
+
+                    document.querySelectorAll('.menu-suspenso').forEach(m => {
+                        if (m !== menu) {
+                            m.style.display = 'none';
+                        }
+                    });
+                    document.querySelectorAll('.botao-filtro').forEach(b => {
+                        if (b !== button) {
+                            b.classList.remove('ativo');
+                        }
+                    });
+
+                    if (isActive) {
+                        menu.style.display = 'none';
+                        button.classList.remove('ativo');
+                    } else {
+                        menu.style.display = 'block';
+                        button.classList.add('ativo');
+                    }
+                });
+            });
+
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.menu-suspenso').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+                document.querySelectorAll('.botao-filtro').forEach(button => {
+                    button.classList.remove('ativo');
+                });
+            });
+
+            document.querySelectorAll('.menu-suspenso').forEach(menu => {
+                menu.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("fade-in");
+
+            const links = document.querySelectorAll("a[href]");
+            links.forEach(link => {
+                const url = link.getAttribute("href");
+                if (url && !url.startsWith("#") && !url.startsWith("http")) {
+                    link.addEventListener("click", e => {
+                        e.preventDefault();
+                        document.body.style.opacity = 0;
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 10);
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoPack - Detalhes do Pedido</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var useDark = (saved === 'dark') || (!saved && prefersDark);
+
+                if (useDark) {
+                    document.documentElement.classList.add('modo-escuro');
+                }
+
+                var meta = document.createElement('meta');
+                meta.name = 'theme-color';
+                meta.content = useDark ? '#1e1e1e' : '#f2f2f2';
+                document.head.appendChild(meta);
+
+            } catch (e) { }
+        })();
+    </script>
+
+    <style>
+        :root {
+            --cor-fundo-escuro: #1e1e1e;
+            --cor-fundo-claro: #f4f4f4;
+            --cor-nav-fundo: rgba(255, 255, 255, 0.6);
+            --cor-principal-fundo: #f2f2f2;
+            --cor-cartao-fundo: rgba(255, 255, 255, 1);
+            --cor-texto-principal: #333;
+            --cor-texto-secundario: #fff;
+            --cor-verde-primario: #4CAF50;
+            --cor-verde-secundario: #8bc34a;
+            --cor-status-completo: #689f38;
+            --cor-status-aguardando: #ff7043;
+            --cor-input-fundo: #fff;
+            --cor-borda-linha: #cccccc;
+            --cor-sombra-caixa: rgba(0, 0, 0, 0.1);
+            --cor-texto-subtitulo-logo: #666;
+            --borda-raio: 12px;
+            --altura-nav: 70px;
+            --cor-status-processando: #2196f3;
+            --cor-item-detalhe-fundo: #e8f5e9; 
+            --cor-detalhe-cartao-fundo: #f8f8f8; 
+            --cor-texto-negrito: #222;
+        }
+
+        .modo-escuro {
+            --cor-nav-fundo: rgba(30, 30, 30, 0.9);
+            --cor-principal-fundo: #1e1e1e;
+            --cor-cartao-fundo: #2d2d2d;
+            --cor-texto-principal: #e0e0e0;
+            --cor-verde-primario: #66bb6a;
+            --cor-status-completo: #7cb342;
+            --cor-status-aguardando: #ffab40;
+            --cor-input-fundo: #3c3c3c;
+            --cor-borda-linha: #444;
+            --cor-sombra-caixa: rgba(255, 255, 255, 0.08);
+            --cor-texto-subtitulo-logo: #a0a0a0;
+            --cor-item-detalhe-fundo: #3c3c3c;
+            --cor-detalhe-cartao-fundo: #272727;
+            --cor-texto-negrito: #f0f0f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gothic A1', sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-principal-fundo);
+            color: var(--cor-texto-principal);
+            min-height: 100vh;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        a {
+            text-decoration: none
+        }
+
+        .container-principal {
+            width: 100%;
+            padding-top: var(--altura-nav);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .barra-navegacao {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--cor-nav-fundo);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid var(--cor-borda-linha);
+            transition: background-color 0.5s, border-bottom-color 0.5s;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .logo-co {
+            color: var(--cor-verde-primario);
+        }
+
+        .logo-pack {
+            color: var(--cor-texto-principal);
+        }
+
+        .subtitulo-logo {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--cor-texto-subtitulo-logo);
+        }
+
+        .menu-navegacao a {
+            text-decoration: none;
+            color: var(--cor-texto-principal);
+            margin: 0 20px;
+            padding: 8px 0;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .menu-navegacao a:hover,
+        .menu-navegacao a.active {
+            color: var(--cor-verde-primario);
+            border-bottom: 3px solid var(--cor-verde-primario);
+        }
+
+        .icone-usuario {
+            font-size: 1.8rem;
+            color: var(--cor-texto-principal);
+            cursor: pointer;
+        }
+
+        .alternador-tema {
+            cursor: pointer;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: var(--cor-texto-principal);
+        }
+
+        .acoes-navegacao {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .conteudo-detalhes {
+            padding: 30px;
+            margin: 0 auto;
+            flex-grow: 1;
+            width: 95%;
+        }
+
+        .titulo-pagina {
+            grid-column: 1 / 3;
+            font-size: 3.2rem;
+            margin-bottom: 0;
+            color: var(--cor-verde-primario);
+        }
+
+        .subtitulo-pagina {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            margin-top: 2px;
+            color: var(--cor-texto-principal);
+            font-weight: 600;
+        }
+
+        .lista-detalhes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cartao-detalhe {
+            background-color: var(--cor-detalhe-cartao-fundo);
+            padding: 20px 30px;
+            border-radius: var(--borda-raio);
+            box-shadow: 0 4px 8px var(--cor-sombra-caixa);
+            border: 1px solid var(--cor-borda-linha);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .modo-escuro .cartao-detalhe {
+            border-color: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .cartao-detalhe:hover {
+            box-shadow: 0 4px 10px var(--cor-sombra-caixa);
+        }
+
+        .detalhe-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 80px;
+        }
+
+        .detalhe-item-titulo {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--cor-texto-subtitulo-logo);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .detalhe-item-valor {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--cor-texto-negrito);
+            white-space: nowrap;
+        }
+
+        .detalhe-item-valor.tamanho {
+            min-width: 90px;
+        }
+
+        .detalhe-item.os-status {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 150px;
+        }
+
+        .status-btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--cor-texto-secundario);
+            white-space: nowrap;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .status-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .status-btn.completo {
+            background-color: var(--cor-status-completo);
+        }
+
+        .status-btn.aguardando {
+            background-color: var(--cor-status-aguardando);
+        }
+
+        .status-btn.processando {
+            background-color: var(--cor-status-processando);
+        }
+
+        .status-btn i {
+            font-size: 0.9rem;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: var(--cor-texto-subtitulo-logo);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+
+        body {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-principal" id="container-principal">
+
+        <header class="barra-navegacao">
+
+            <a href="4-Inicio.html" class="logo">
+                <span class="logo-co">Co</span><span class="logo-pack">Pack</span>
+                <span class="subtitulo-logo">EMBALAGENS</span>
+            </a>
+
+            <nav class="menu-navegacao">
+                <a href="4-Inicio.html">Início</a>
+                <a href="#" class="active">Pedidos</a>
+                <a href="7-Produção.html">Produção</a>
+                <a href="9-Relatórios.html">Relatórios</a>
+            </nav>
+
+            <div class="acoes-navegacao">
+                <i class="fas fa-moon alternador-tema" id="theme-toggle" title="Alternar Tema"></i>
+                <i class="fas fa-user-circle icone-usuario"></i>
+            </div>
+
+        </header>
+
+        <main class="conteudo-detalhes">
+
+            <h1 class="titulo-pagina">Detalhes do Pedido</h1>
+
+            <h2 class="subtitulo-pagina">Nº 0000001</h2>
+
+            <div class="lista-detalhes">
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn completo" data-status="completo">
+                            Completa <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn aguardando" data-status="aguardando">
+                            Aguardando <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn processando" data-status="processando">
+                            Processando <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn completo" data-status="completo">
+                            Completa <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn completo" data-status="completo">
+                            Completa <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="cartao-detalhe">
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Produto</span>
+                        <span class="detalhe-item-valor">Copo</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Fibra</span>
+                        <span class="detalhe-item-valor">96×66</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">QTD Base</span>
+                        <span class="detalhe-item-valor">82</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faca</span>
+                        <span class="detalhe-item-valor">35</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Faltam</span>
+                        <span class="detalhe-item-valor">-47</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Tamanho</span>
+                        <span class="detalhe-item-valor tamanho">250ml</span>
+                    </div>
+
+                    <div class="detalhe-item">
+                        <span class="detalhe-item-titulo">Família</span>
+                        <span class="detalhe-item-valor">Personalizado</span>
+                    </div>
+
+                    <div class="detalhe-item os-status">
+                        <button class="status-btn aguardando" data-status="aguardando">
+                            Aguardando <i class="fas fa-caret-down"></i>
+                        </button>
+                    </div>
+
+            </div>
+
+        </main>
+
+        <p class="copyright">&copy; 2024 CoPack. Todos os direitos reservados.</p>
+
+    </div>
+
+    <script>
+        const statuses = ['completo', 'aguardando', 'processando'];
+        const statusLabels = {
+            'completo': 'Completa',
+            'aguardando': 'Aguardando',
+            'processando': 'Processando'
+        };
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                htmlElement.classList.add('modo-escuro');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            } else {
+                htmlElement.classList.remove('modo-escuro');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            }
+        }
+
+        window.onload = function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            let initialDark = false;
+
+            if (savedTheme === 'dark') {
+                initialDark = true;
+            } else if (savedTheme === 'light') {
+                initialDark = false;
+            } else if (prefersDark) {
+                initialDark = true;
+            }
+
+            applyTheme(initialDark);
+
+            document.body.classList.add("fade-in");
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = htmlElement.classList.contains('modo-escuro');
+            applyTheme(!isDark);
+            localStorage.setItem('theme', !isDark ? 'dark' : 'light');
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const statusButtons = document.querySelectorAll('.status-btn');
+
+            statusButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    let currentStatus = button.getAttribute('data-status');
+
+                    let currentIndex = statuses.indexOf(currentStatus);
+
+                    let nextIndex = (currentIndex + 1) % statuses.length;
+                    let nextStatus = statuses[nextIndex];
+
+                    button.classList.remove('completo', 'aguardando', 'processando');
+
+                    button.classList.add(nextStatus);
+
+                    button.setAttribute('data-status', nextStatus);
+
+                    button.innerHTML = `${statusLabels[nextStatus]} <i class="fas fa-caret-down"></i>`;
+                });
+            });
+
+            const links = document.querySelectorAll("a[href]");
+            links.forEach(link => {
+                const url = link.getAttribute("href");
+                if (url && !url.startsWith("#") && !url.startsWith("http")) {
+                    link.addEventListener("click", e => {
+                        e.preventDefault();
+                        document.body.style.opacity = 0;
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 10);
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

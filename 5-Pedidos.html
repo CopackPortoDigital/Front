@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoPack - Pedidos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var useDark = (saved === 'dark') || (!saved && prefersDark);
+
+                if (useDark) {
+                    document.documentElement.classList.add('modo-escuro');
+                }
+
+                var meta = document.createElement('meta');
+                meta.name = 'theme-color';
+                meta.content = useDark ? '#1e1e1e' : '#f2f2f2';
+                document.head.appendChild(meta);
+
+            } catch (e) { }
+        })();
+
+    </script>
+
+    <style>
+        :root {
+            --cor-fundo-escuro: #1e1e1e;
+            --cor-fundo-claro: #f4f4f4;
+            --cor-fundo-principal: #f2f2f2;
+            --cor-texto-escuro: #333;
+            --cor-texto-claro: #fff;
+            --cor-borda: #cccccc;
+            --cor-sombra: rgba(0, 0, 0, 0.1);
+            --raio-borda: 12px;
+            --altura-navbar: 70px;
+
+            --cor-navbar-fundo: rgba(255, 255, 255, 0.6);
+            --cor-card-fundo: rgba(255, 255, 255, 1);
+            --cor-input-fundo: #fff;
+            --cor-subtitulo-logo: #666;
+
+            --cor-verde-primario: #4CAF50;
+            --cor-verde-secundario: #8bc34a;
+            --cor-status-completo: #689f38;
+            --cor-status-aguardando: #ff7043;
+        }
+
+        .modo-escuro {
+            --cor-navbar-fundo: rgba(30, 30, 30, 0.9);
+            --cor-fundo-principal: #1e1e1e;
+            --cor-card-fundo: #2d2d2d;
+            --cor-texto-escuro: #e0e0e0; 
+            --cor-input-fundo: #3c3c3c;
+            --cor-borda: #444;
+            --cor-sombra: rgba(255, 255, 255, 0.08);
+            --cor-subtitulo-logo: #a0a0a0;
+
+            --cor-verde-primario: #66bb6a;
+            --cor-status-completo: #7cb342;
+            --cor-status-aguardando: #ffab40;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gothic A1', sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-escuro);
+            min-height: 100vh;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .container-principal {
+            width: 100vw;
+            padding-top: var(--altura-navbar);
+        }
+
+        .barra-navegacao {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--cor-navbar-fundo);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid var(--cor-borda);
+            transition: background-color 0.5s, border-bottom-color 0.5s;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .logo-co {
+            color: var(--cor-verde-primario);
+        }
+
+        .logo-pack {
+            color: var(--cor-texto-escuro);
+        }
+
+        .subtitulo-logo {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: var(--cor-subtitulo-logo);
+        }
+
+        .menu-navegacao a {
+            text-decoration: none;
+            color: var(--cor-texto-escuro);
+            margin: 0 20px;
+            padding: 8px 0;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .menu-navegacao a:hover,
+        .menu-navegacao a.active {
+            color: var(--cor-verde-primario);
+            border-bottom: 3px solid var(--cor-verde-primario);
+        }
+
+        .icone-usuario {
+            font-size: 1.8rem;
+            color: var(--cor-texto-escuro);
+            cursor: pointer;
+        }
+
+        .alternador-tema {
+            cursor: pointer;
+            margin-left: 20px;
+            font-size: 1.5rem;
+            color: var(--cor-texto-escuro);
+        }
+
+        .acoes-navegacao {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .conteudo-principal {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 30px;
+        }
+
+        .titulo-pagina {
+            grid-column: 1 / 3;
+            font-size: 3.2rem;
+            margin-bottom: 0;
+            color: var(--cor-verde-primario);
+        }
+
+        .barra-filtros {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+            background-color: var(--cor-card-fundo);
+            padding: 30px;
+            border-radius: var(--raio-borda);
+            box-shadow: 0 4px 8px var(--cor-sombra);
+            border: 1px solid var(--cor-borda);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .barra-filtros h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--cor-verde-primario);
+        }
+
+        .grupo-filtro {
+            margin-bottom: 20px;
+        }
+
+        .grupo-filtro label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--cor-texto-escuro);
+            font-size: 1rem;
+        }
+
+        .grupo-filtro input,
+        .grupo-filtro select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--cor-borda);
+            background-color: var(--cor-input-fundo);
+            color: var(--cor-texto-escuro);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .grupo-filtro input:focus,
+        .grupo-filtro select:focus {
+            outline: none;
+            border-color: var(--cor-verde-primario);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .acoes-filtro {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 10px;
+        }
+
+        .botao-aplicar,
+        .botao-limpar {
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .botao-aplicar {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-claro);
+            border: none;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .botao-aplicar:hover {
+            background-color: #388e3c;
+            transform: translateY(-1px);
+        }
+
+        .botao-limpar {
+            background: none;
+            border: 1px solid var(--cor-borda);
+            color: var(--cor-subtitulo-logo);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .botao-limpar:hover {
+            background-color: var(--cor-fundo-claro);
+            color: var(--cor-texto-escuro);
+        }
+
+        .secao-pedidos {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+            background-color: var(--cor-card-fundo);
+            padding: 30px;
+            border-radius: var(--raio-borda);
+            box-shadow: 0 4px 8px var(--cor-sombra);
+            border: 1px solid var(--cor-borda);
+        }
+
+        .barra-pesquisa {
+            display: flex;
+            align-items: center;
+            background-color: var(--cor-input-fundo);
+            border-radius: var(--raio-borda);
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--cor-borda);
+            box-shadow: 0 2px 4px var(--cor-sombra);
+        }
+
+        .barra-pesquisa i {
+            color: var(--cor-subtitulo-logo);
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .barra-pesquisa input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            font-size: 1.1rem;
+            background: transparent;
+            color: var(--cor-texto-escuro);
+        }
+
+        .secao-pedidos h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .tabela-pedidos {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .tabela-pedidos th {
+            color: var(--cor-subtitulo-logo);
+            font-weight: 600;
+            background: var(--cor-card-fundo);
+            border-bottom: 2px solid var(--cor-verde-primario);
+        }
+
+        .tabela-pedidos th,
+        .tabela-pedidos td {
+            padding: 14px;
+            text-align: left;
+            font-size: 1rem;
+            color: var(--cor-texto-escuro);
+        }
+
+        .tabela-pedidos tbody tr {
+            border-radius: var(--raio-borda);
+            transition: background-color 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--cor-borda);
+        }
+
+        .tabela-pedidos tbody tr:hover {
+            background-color: var(--cor-fundo-principal);
+            box-shadow: 0 2px 8px var(--cor-sombra);
+        }
+
+        .status {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+            color: var(--cor-texto-claro);
+        }
+
+        .status.completo {
+            background-color: var(--cor-status-completo);
+        }
+
+        .status.aguardando {
+            background-color: var(--cor-status-aguardando);
+        }
+
+        .status.processando {
+            background-color: #2196f3;
+        }
+
+        .btn-ver-pedido {
+            background-color: var(--cor-verde-primario);
+            color: var(--cor-texto-claro);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-ver-pedido:hover {
+            background-color: #388e3c;
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: var(--cor-subtitulo-logo);
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        body {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out;
+        }
+
+        body.fade-in {
+            opacity: 1;
+        }
+
+        .os {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            color: var(--cor-texto-claro);
+        }
+
+        .os.completo {
+            background-color: var(--cor-status-completo);
+        }
+
+        .os.aguardando {
+            background-color: var(--cor-status-aguardando);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container-principal" id="container-principal">
+
+        <header class="barra-navegacao">
+
+            <a href="4-Inicio.html" class="logo">
+                <span class="logo-co">Co</span><span class="logo-pack">Pack</span>
+                <span class="subtitulo-logo">EMBALAGENS</span>
+            </a>
+
+            <nav class="menu-navegacao">
+                <a href="4-Inicio.html">Início</a>
+                <a href="#" class="active">Pedidos</a>
+                <a href="7-Produção.html">Produção</a>
+                <a href="">Relatórios</a>
+            </nav>
+
+            <div class="acoes-navegacao">
+                <i class="fas fa-moon alternador-tema" id="theme-toggle" title="Alternar Tema"></i>
+                <i class="fas fa-user-circle icone-usuario"></i>
+            </div>
+
+        </header>
+
+        <div class="conteudo-principal">
+
+            <h1 class="titulo-pagina">Pedidos</h1>
+
+            <aside class="barra-filtros">
+
+                <div style="flex-grow: 1; display: flex; flex-direction: column;">
+
+                    <h2>Filtros Avançados</h2>
+
+                    <div class="grupo-filtro">
+                        <label for="faturamento">Previsão de Faturamento</label>
+                        <select id="faturamento">
+                            <option value="">Todos</option>
+                            <option value="acima_50k">Acima de R$ 50.000</option>
+                            <option value="abaixo_50k">Abaixo de R$ 50.000</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <label for="pedido-num">Nº do Pedido</label>
+                        <input type="text" id="pedido-num" placeholder="Ex: 00000015">
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <label for="cliente">Cliente</label>
+                        <input type="text" id="cliente" placeholder="Nome do Cliente">
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <label for="produto">Produto</label>
+                        <select id="produto">
+                            <option value="">Todos os Produtos</option>
+                            <option value="copo">Copo</option>
+                            <option value="pote">Pote</option>
+                            <option value="bdj">BDJ</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <label for="quantidade">Quantidade Mínima (QTD)</label>
+                        <input type="number" id="quantidade" placeholder="Mínimo">
+                    </div>
+
+                    <div class="grupo-filtro">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="">Todos os Status</option>
+                            <option value="completo">Completo</option>
+                            <option value="processando">Em Processamento</option>
+                            <option value="aguardando">Aguardando</option>
+                        </select>
+                    </div>
+
+                    <div class="acoes-filtro">
+                        <button class="botao-aplicar"><i class="fas fa-filter"></i>Aplicar</button>
+                        <button class="botao-limpar"><i class="fas fa-times"></i> Limpar</button>
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <section class="secao-pedidos">
+
+                <div class="barra-pesquisa">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Pesquise pelo Nº do Pedido">
+                </div>
+
+                <h2>Lista de Pedidos Ativos</h2>
+
+                <table class="tabela-pedidos">
+
+                    <thead>
+                        <tr>
+                            <th><b>Nº Pedido</b></th>
+                            <th><b>Produto</b></th>
+                            <th><b>Cliente</b></th>
+                            <th><b>QTD</b></th>
+                            <th><b>OS</b></th>
+                            <th><b>Visão Geral</b></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>0000001</td>
+                            <td>Copo 300ml</td>
+                            <td>Copack</td>
+                            <td>5.000</td>
+                            <td>
+                                <div class="os completo"><i class="fas fa-check"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000002</td>
+                            <td>Pote 500ml</td>
+                            <td>Copack</td>
+                            <td>12.000</td>
+                            <td>
+                                <div class="os aguardando"><i class="fas fa-times"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000003</td>
+                            <td>BDJ 800ml</td>
+                            <td>Copack</td>
+                            <td>8.500</td>
+                            <td>
+                                <div class="os completo"><i class="fas fa-check"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000004</td>
+                            <td>Copo 200ml</td>
+                            <td>Copack</td>
+                            <td>20.000</td>
+                            <td>
+                                <div class="os aguardando"><i class="fas fa-times"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000005</td>
+                            <td>Pote 300ml</td>
+                            <td>Copack</td>
+                            <td>10.000</td>
+                            <td>
+                                <div class="os completo"><i class="fas fa-check"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000006</td>
+                            <td>BDJ 650ml</td>
+                            <td>Copack</td>
+                            <td>15.000</td>
+                            <td>
+                                <div class="os aguardando"><i class="fas fa-times"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                        <tr>
+                            <td>0000007</td>
+                            <td>Copo 500ml</td>
+                            <td>Copack</td>
+                            <td>7.500</td>
+                            <td>
+                                <div class="os completo"><i class="fas fa-check"></i></div>
+                            </td>
+                            <td><a href="6-DetalhesPedido.html" class="btn-ver-pedido">Ver Pedido</a></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </div>
+
+        <p class="copyright">&copy; 2024 CoPack. Todos os direitos reservados.</p>
+
+    </div>
+
+    <script>
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                body.classList.add('modo-escuro');
+                themeToggle.classList.remove('fa-moon');
+                themeToggle.classList.add('fa-sun');
+            } else {
+                body.classList.remove('modo-escuro');
+                themeToggle.classList.remove('fa-sun');
+                themeToggle.classList.add('fa-moon');
+            }
+        }
+
+        window.onload = function () {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark') {
+                applyTheme(true);
+            } else if (savedTheme === 'light') {
+                applyTheme(false);
+            } else if (prefersDark) {
+                applyTheme(true);
+            } else {
+                applyTheme(false);
+            }
+        };
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('modo-escuro');
+            const isDarkCurrent = document.documentElement.classList.contains('modo-escuro'); 
+            
+            if (isDarkCurrent) {
+                document.documentElement.classList.remove('modo-escuro');
+                applyTheme(false);
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('modo-escuro');
+                applyTheme(true);
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("fade-in");
+
+            const links = document.querySelectorAll("a[href]");
+            links.forEach(link => {
+                const url = link.getAttribute("href");
+                if (url && !url.startsWith("#") && !url.startsWith("http")) {
+                    link.addEventListener("click", e => {
+                        e.preventDefault();
+                        document.body.style.opacity = 0;
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 10);
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
