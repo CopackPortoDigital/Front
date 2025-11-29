@@ -299,6 +299,55 @@
         body.fade-in {
             opacity: 1;
         }
+
+        .acoes-pedido {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px; 
+            padding-bottom: 30px; 
+        }
+
+        .btn-acao {
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-acao:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .salvar-alteracoes {
+            background-color: var(--cor-verde-primario); 
+            color: var(--cor-texto-secundario);
+        }
+        
+        .salvar-alteracoes:hover {
+            background-color: var(--cor-verde-secundario);
+        }
+
+        .excluir-pedido {
+            background-color: #d32f2f; 
+            color: var(--cor-texto-secundario);
+        }
+
+        .modo-escuro .excluir-pedido {
+            background-color: #e57373; 
+        }
+        
+        .excluir-pedido:hover {
+            background-color: #ff5722;
+        }
+        
     </style>
 
 </head>
@@ -606,6 +655,15 @@
 
             </div>
 
+            <div class="acoes-pedido">
+                <button class="btn-acao salvar-alteracoes">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+                <button class="btn-acao excluir-pedido">
+                    <i class="fas fa-trash-alt"></i> Excluir Pedido
+                </button>
+            </div>
+                
         </main>
 
         <p class="copyright">&copy; 2024 CoPack. Todos os direitos reservados.</p>
@@ -698,5 +756,6 @@
     </script>
 
 </body>
+
 
 </html>
